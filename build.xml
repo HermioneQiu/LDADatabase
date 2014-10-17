@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="DatabaseJar" default="run" basedir=".">
+<property name="src" value="src"/>
+<property name="dest" value="classes"/>
+<property name="Database_jar" value="LDADatabase.jar"/>
+	
+<pathconvert property="libs" pathsep=" ">
+	 <mapper>
+	    <chainedmapper>
+			<flattenmapper/>
+				<globmapper from="*" to="lib/*"/>
+		</chainedmapper>
+	</mapper>
+	<fileset dir="lib">
+		<include name="*.jar"/>
+	</fileset>
+</pathconvert>
+<target name="init">
+	<mkdir dir="${dest}"/>
+</target>
+<target name="compile" depends="init">
+	<javac srcdir="${src}" destdir="${dest}">
+	<classpath>
+		<fileset dir="lib">
+			<include name="*.jar"/>
+		</fileset>
+	</classpath>
+	</javac>
+</target>
+<target name="build" depends="compile">
+	<jar jarfile="${Database_jar}" basedir="${dest}">
+	    <manifest>  
+            <!--指定main-class-->  
+            <attribute name="Main-Class" value="com.hermione.LDADatabase" />  
+            <!--指定Class-Path, 引用的libs-->  
+        	<attribute name="Class-Path" value="${libs}"/>  
+        </manifest>  
+	</jar>
+</target>
+<target name="run" depends="build">
+	<java jar="${Database_jar}" fork="true"/>
+</target>
+</project>
